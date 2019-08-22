@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using MyLeasing.Web.Data.Entities;
+using MyLeasing.Web.Models;
 using System.Threading.Tasks;
 
 namespace MyLeasing.Web.Helpers
@@ -15,5 +16,9 @@ namespace MyLeasing.Web.Helpers
         Task AdduserToRoleAsync(User user, string rolName);
 
         Task<bool> IsUserInRoleAsync(User user, string rolName);
+
+        Task<SignInResult> LoginAsync(LoginViewModel model);
+
+        Task LogoutAsync();
     }
 }
