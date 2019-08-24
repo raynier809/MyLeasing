@@ -26,15 +26,14 @@ namespace MyLeasing.Web.Data.Entities
         public decimal Price { get; set; }
 
         [Required(ErrorMessage = "The field {0} is mandatory.")]
-        [Display(Name = "Square Meters*")]
+        [Display(Name = "Square Meters")]
         public int SquareMeters { get; set; }
 
         [Required(ErrorMessage = "The field {0} is mandatory.")]
-        [Display(Name = "Square Meters")]
         public int Rooms { get; set; }
 
         [Required(ErrorMessage = "The field {0} is mandatory.")]
-        [Display(Name = "Stratum*")]
+        [Display(Name = "Stratum")]
         public int Stratum { get; set; }
 
         [Display(Name = "Has Parking Lot?")]
