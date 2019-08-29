@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MyLeasing.Web.Data.Entities
 {
@@ -18,6 +15,7 @@ namespace MyLeasing.Web.Data.Entities
         [Display(Name = "Price")]
         public decimal Price { get; set; }
 
+        //TODO: Arreglar la fecha que no se muestra en la vista para todas las fechas
         [Required(ErrorMessage = "The field {0} is mandatory.")]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "Start Date")]
