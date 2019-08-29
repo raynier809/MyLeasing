@@ -10,12 +10,11 @@ namespace MyLeasing.Web.Data.Entities
     {
         public int Id { get; set; }
 
-        [Display(Name = "Has Parking Lot?")]
-        [Required(ErrorMessage ="The field {0} is mandatory.")]
+        [Display(Name = "Image")]
         public string ImageUrl { get; set; }
 
         //TODO: change  the path when publish
-        public string ImageFullPath => $"https://TBD.azuerewebsites.net{ImageUrl.Substring(1)}";
+        public string ImageFullPath => string.IsNullOrEmpty(ImageUrl) ? null : $"https://TBD.azuerewebsites.net{ImageUrl.Substring(1)}";
 
         public Property Property { get; set; }
     }
