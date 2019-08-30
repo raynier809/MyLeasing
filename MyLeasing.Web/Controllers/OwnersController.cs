@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyLeasing.Web.Data;
 using MyLeasing.Web.Data.Entities;
 using MyLeasing.Web.Helpers;
 using MyLeasing.Web.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MyLeasing.Web.Controllers
 {
@@ -36,16 +35,16 @@ namespace MyLeasing.Web.Controllers
             _imageHelper = imageHelper;
         }
 
-      
+
         public IActionResult Index()
         {
-            return View( _dataContext.Owners
+            return View(_dataContext.Owners
                 .Include(o => o.User)
                 .Include(o => o.Properties)
                 .Include(o => o.Contracts));
         }
 
-      
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -69,13 +68,13 @@ namespace MyLeasing.Web.Controllers
             return View(owner);
         }
 
-        
+
         public IActionResult Create()
         {
             return View();
         }
 
-       
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AddUserViewMadel model)
@@ -169,7 +168,7 @@ namespace MyLeasing.Web.Controllers
                 owner.User.LastName = model.LastName;
                 owner.User.Address = model.Address;
                 owner.User.PhoneNumber = model.PhoneNumer;
-                
+
 
                 await _userHelper.UpdateUserAsync(owner.User);
                 return RedirectToAction(nameof(Index));
@@ -231,7 +230,7 @@ namespace MyLeasing.Web.Controllers
             var view = new PropertyViewModel
             {
                 OwnerId = owner.Id,
-                PropertyTypes =  _combosHelper.GetComboPropertyTypes()
+                PropertyTypes = _combosHelper.GetComboPropertyTypes()
             };
 
             return View(view);
@@ -262,7 +261,7 @@ namespace MyLeasing.Web.Controllers
             var property = await _dataContext.Properties
                 .Include(p => p.Owner)
                 .Include(p => p.PropertyType)
-                .FirstOrDefaultAsync( p => p.Id == id);
+                .FirstOrDefaultAsync(p => p.Id == id);
             if (property == null)
             {
                 return NotFound();
@@ -394,7 +393,7 @@ namespace MyLeasing.Web.Controllers
                 await _dataContext.SaveChangesAsync();
                 return RedirectToAction($"{nameof(DetailsProperty)}/{model.PropertyId}");
             }
-            model.Lessees =  _combosHelper.GetComboLessees();
+            model.Lessees = _combosHelper.GetComboLessees();
             return View(model);
         }
 
