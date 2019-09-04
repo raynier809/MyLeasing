@@ -14,7 +14,7 @@ namespace MyLeasing.Web.Data.Entities
         public string ImageUrl { get; set; }
 
         //TODO: change  the path when publish
-        public string ImageFullPath => string.IsNullOrEmpty(ImageUrl) ? null : $"https://TBD.azuerewebsites.net{ImageUrl.Substring(1)}";
+        public string ImageFullPath => string.IsNullOrEmpty(ImageUrl) ? null : $"http://myleasing.somee.com{ImageUrl.Substring(1)}";
 
         public Property Property { get; set; }
     }
