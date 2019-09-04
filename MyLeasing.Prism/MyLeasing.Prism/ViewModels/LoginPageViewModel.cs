@@ -19,6 +19,10 @@ namespace MyLeasing.Prism.ViewModels
             _apiService = apiService;
             Title = "Login";
             IsEnabled = true;
+
+            //TODO: Cambien resto
+            Email = "raynier_trastornador@hotmail.com";
+            Password = "123456";
         }
 
         public DelegateCommand LoginCommand => _loginCommand ?? (_loginCommand = new DelegateCommand(Login));
@@ -60,13 +64,23 @@ namespace MyLeasing.Prism.ViewModels
             IsRunning = true;
             IsEnabled = false;
 
+            var url = App.Current.Resources["UrlAPI"].ToString();
+            var connection = await _apiService.checkConnectionAsync(url);
+            if (!connection)
+            {
+                IsEnabled = true;
+                IsRunning = false;
+                await App.Current.MainPage.DisplayAlert("Error", "Check the internet connection", "Accept");
+                return;
+            }
+
             var request = new TokenRequest
             {
                 Password = Password,
                 Username = Email
             };
 
-            var url = App.Current.Resources["UrlAPI"].ToString();
+            
             var response = await _apiService.GetTokenAsync(url, "/Account", "/CreateToken", request);
 
             IsRunning = false;
