@@ -32,7 +32,7 @@ namespace MyLeasing.Common.Models
         public ICollection<ContractResponse> Contracts { get; set; }
 
         public string FirstImage => PropertyImages == null || PropertyImages.Count == 0
-                ? "https://www.google.com/url?sa=i&source=images&cd=&ved=&url=https%3A%2F%2Fwww.shutterstock.com%2Fes%2Fsearch%2Fno%2Bimage&psig=AOvVaw3U8fsinKGUowV5w7z-vqBU&ust=1568925776074943"
+                ? "https://image.shutterstock.com/z/stock-vector-no-image-available-sign-internet-web-icon-to-indicate-the-absence-of-image-until-it-will-be-261719003.jpg"
                 : PropertyImages.FirstOrDefault().ImageUrl;
             
         

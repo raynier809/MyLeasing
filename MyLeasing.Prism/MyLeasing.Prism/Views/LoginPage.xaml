@@ -23,9 +23,14 @@
         <ActivityIndicator
             IsRunning="{Binding IsRunning}"
             VerticalOptions="CenterAndExpand"/>
-        <Button            
+        <Button    
+            BackgroundColor="Navy"
+            CornerRadius="26"
             Command="{Binding LoginCommand}"
+            HeightRequest="46"
             IsEnabled="{Binding IsEnabled}"
-            Text="Login"/>
+            Text="Login"
+            TextColor="White"/>
+
     </StackLayout>
 </ContentPage>
