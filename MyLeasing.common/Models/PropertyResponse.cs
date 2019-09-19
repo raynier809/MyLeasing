@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace MyLeasing.Common.Models
 {
@@ -29,6 +30,12 @@ namespace MyLeasing.Common.Models
         public ICollection<PropertyImageResponse> PropertyImages { get; set; }
 
         public ICollection<ContractResponse> Contracts { get; set; }
+
+        public string FirstImage => PropertyImages == null || PropertyImages.Count == 0
+                ? "https://www.google.com/url?sa=i&source=images&cd=&ved=&url=https%3A%2F%2Fwww.shutterstock.com%2Fes%2Fsearch%2Fno%2Bimage&psig=AOvVaw3U8fsinKGUowV5w7z-vqBU&ust=1568925776074943"
+                : PropertyImages.FirstOrDefault().ImageUrl;
+            
+        
     }
 
 }

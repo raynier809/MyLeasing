@@ -236,7 +236,6 @@ namespace MyLeasing.Web.Controllers
             return View(view);
         }
 
-
         [HttpPost]
         public async Task<IActionResult> AddProperty(PropertyViewModel model)
         {

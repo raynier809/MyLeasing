@@ -7,6 +7,7 @@ namespace MyLeasing.Prism.ViewModels
 {
     public class LoginPageViewModel : ViewModelBase
     {
+        private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
         private string _password;
         private bool _isRunning;
@@ -16,6 +17,7 @@ namespace MyLeasing.Prism.ViewModels
             INavigationService navigationService,
             IApiService apiService) : base(navigationService)
         {
+            _navigationService = navigationService;
             _apiService = apiService;
             Title = "Login";
             IsEnabled = true;
@@ -83,18 +85,38 @@ namespace MyLeasing.Prism.ViewModels
             
             var response = await _apiService.GetTokenAsync(url, "/Account", "/CreateToken", request);
 
-            IsRunning = false;
-            IsEnabled = true;
+            
 
             if (!response.IsSuccess)
             {
+                IsRunning = false;
+                IsEnabled = true;
                 await App.Current.MainPage.DisplayAlert("Error", "User or password incorrect...", "Accept");
                 Password = string.Empty;
                 return;
             }
             var token = response.Result;
-            await App.Current.MainPage.DisplayAlert("Ok", "Fuck Yeah!!!", "Accept");
+            var response2 = await _apiService.GetOwnerByEmailAsync(
+                url,
+                "api",
+                "/Owners/GetOwnerByEmail",
+                "bearer",
+                token.Token,
+                Email);
+            
+            if (!response2.IsSuccess)
+            {
+                IsRunning = false;
+                IsEnabled = true;
+                await App.Current.MainPage.DisplayAlert("Error", "Problem with user data, call 809-318-8878...", "Accept");
+                return;
+            }
+            var owner = response2.Result;
+            var parameters = new NavigationParameters { { "owner", owner } };
 
+            await _navigationService.NavigateAsync("PropertiesPage", parameters);
+            IsRunning = false;
+            IsEnabled = true;
         }
     }
 }
