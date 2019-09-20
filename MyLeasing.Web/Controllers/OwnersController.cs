@@ -71,7 +71,8 @@ namespace MyLeasing.Web.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            var view = new AddUserViewMadel { RoleId = 2 };
+            return View(view);
         }
 
 

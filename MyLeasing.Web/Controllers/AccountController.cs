@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using MyLeasing.Web.Data;
+using MyLeasing.Web.Data.Entities;
 using MyLeasing.Web.Helpers;
 using MyLeasing.Web.Models;
 using System;
@@ -17,13 +19,19 @@ namespace MyLeasing.Web.Controllers
     {
         private readonly IUserHelper _userHelper;
         private readonly IConfiguration _configuration;
+        private readonly ICombosHelper _combosHelper;
+        private readonly DataContext _dataContext;
 
         public AccountController(
             IUserHelper userHelper,
-            IConfiguration configuration )
+            IConfiguration configuration,
+            ICombosHelper combosHelper,
+            DataContext dataContext)
         {
             _userHelper = userHelper;
             _configuration = configuration;
+            _combosHelper = combosHelper;
+            _dataContext = dataContext;
         }
 
         [HttpGet]
@@ -99,6 +107,151 @@ namespace MyLeasing.Web.Controllers
 
             return BadRequest();
         }
+
+        public IActionResult NotAuthorized()
+        {
+            return View();
+        }
+
+        public IActionResult Register()
+        {
+            var model = new AddUserViewMadel
+            {
+                Roles = _combosHelper.GetComboRoles()
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(AddUserViewMadel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var role = "Owner";
+                if (model.RoleId == 1)
+                {
+                    role = "Lessee";
+                }
+
+                var user =  await _userHelper.AddUser(model, role);
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "This email is already used.");
+                    return View(model);
+                }
+
+                if (model.RoleId ==1)
+                {
+                    var lessee = new Lesse
+                    {
+                        Contracts = new List<Contract>(),
+                        User = user
+                    };
+                    _dataContext.Lesses.Add(lessee);
+                }
+                else
+                {
+                    var owner = new Owner
+                    {
+                        User = user,
+                        Contracts = new List<Contract>(),
+                        Properties = new List<Property>()
+                    };
+                    _dataContext.Owners.Add(owner);
+                }
+
+                await _dataContext.SaveChangesAsync();
+                var loginviewModel = new LoginViewModel
+                {
+                    Password = model.Password,
+                    RememberMe = false,
+                    Username = model.username
+                };
+                var result2 = await _userHelper.LoginAsync(loginviewModel);
+                if (result2.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+
+            }
+            model.Roles = _combosHelper.GetComboRoles();
+            return View(model);
+        }
+
+        public async Task<IActionResult> ChangeUser()
+        {
+            var user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var model = new EditUserViewModel
+            {
+                Address = user.Address,
+                Document = user.Document,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                PhoneNumer = user.PhoneNumber
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeUser(EditUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
+
+                user.Document = model.Document;
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.Address = model.Address;
+                user.PhoneNumber = model.PhoneNumer;
+
+                await _userHelper.UpdateUserAsync(user);
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(model);
+        }
+
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
+                if (user != null)
+                {
+                    var result = await _userHelper.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("ChangeUser");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, result.Errors.FirstOrDefault().Description);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "User no found.");
+                }
+            }
+
+            return View(model);
+        }
+
 
 
     }

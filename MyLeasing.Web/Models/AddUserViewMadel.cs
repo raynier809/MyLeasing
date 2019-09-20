@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -26,5 +27,12 @@ namespace MyLeasing.Web.Models
         [Display(Name = "Password Confirm")]
         [Compare("Password")]
         public string PasswordConfrirm { get; set; }
+
+        [Required(ErrorMessage = "The field {0} is mandatory.")]
+        [Display(Name = "Register as")]
+        [Range(1,int.MaxValue, ErrorMessage ="You must select a role")]
+        public int RoleId { get; set; }
+
+        public IEnumerable<SelectListItem> Roles { get; set; }
     }
 }

@@ -22,6 +22,28 @@ namespace MyLeasing.Web.Helpers
             _signInManager = signInManager;
         }
 
+        public async Task<User> AddUser(AddUserViewMadel view, string role)
+        {
+            var user = new User
+            {
+                Address = view.Address,
+                Document = view.Document,
+                Email = view.username,
+                FirstName = view.FirstName,
+                LastName = view.LastName,
+                PhoneNumber = view.PhoneNumer,
+                UserName = view.username
+            };
+
+            var result = await AddUserAsync(user, view.Password);
+            if (result != IdentityResult.Success)
+            {
+                return null;
+            }
+            var newUser = await GetUserByEmailAsync(view.username);
+            await AdduserToRoleAsync(newUser, role);
+            return newUser;
+        }
 
         public async Task<IdentityResult> AddUserAsync(User user, string password)
         {
@@ -31,6 +53,11 @@ namespace MyLeasing.Web.Helpers
         public async Task AdduserToRoleAsync(User user, string rolName)
         {
             await _userManager.AddToRoleAsync(user, rolName);
+        }
+
+        public async Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword)
+        {
+            return await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
         }
 
         public async Task CheckRoleAsync(string rolName)
