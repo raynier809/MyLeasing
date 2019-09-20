@@ -22,6 +22,7 @@ namespace MyLeasing.Prism
 
         protected override async void OnInitialized()
         {
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MTQ1MDk1QDMxMzcyZTMyMmUzMFg5THlxYVFDT1VQTDBhTkVSWXY0M2M0b1BuWnhoeE5XSlZGbFRQRnBKTlU9");            
             InitializeComponent();
 
             await NavigationService.NavigateAsync("NavigationPage/LoginPage");
@@ -34,6 +35,8 @@ namespace MyLeasing.Prism
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
             containerRegistry.RegisterForNavigation<PropertiesPage, PropertiesPageViewModel>();
             containerRegistry.RegisterForNavigation<PropertyPage, PropertyPageViewModel>();
+            containerRegistry.RegisterForNavigation<ContractsPage, ContractsPageViewModel>();
+            containerRegistry.RegisterForNavigation<ContractPage, ContractPageViewModel>();
         }
     }
 }
