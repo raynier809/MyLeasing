@@ -5,32 +5,38 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MyLeasing.Prism.Views.LoginPage"
              Title="{Binding Title}">
-
-    <StackLayout 
+    
+    <ScrollView>
+        <StackLayout 
         Padding="10">
-        <Label
-            Text="Email"/>
-        <Entry
-            Keyboard="Email"
-            Placeholder="Enter your email..."
-            Text="{Binding Email}"/>
-        <Label
-            Text="Password"/>
-        <Entry
-            IsPassword="True"
-            Placeholder="Enter your password..."
-            Text="{Binding Password}"/>
-        <ActivityIndicator
-            IsRunning="{Binding IsRunning}"
-            VerticalOptions="CenterAndExpand"/>
-        <Button    
-            BackgroundColor="Navy"
-            CornerRadius="26"
-            Command="{Binding LoginCommand}"
-            HeightRequest="46"
-            IsEnabled="{Binding IsEnabled}"
-            Text="Login"
-            TextColor="White"/>
+            <Image
+                Margin="20"
+                Source="logo"
+                WidthRequest="230"/>
+            <Label
+                Text="Email"/>
+            <Entry
+                Keyboard="Email"
+                Placeholder="Enter your email..."
+                Text="{Binding Email}"/>
+            <Label
+                Text="Password"/>
+            <Entry
+                IsPassword="True"
+                Placeholder="Enter your password..."
+                Text="{Binding Password}"/>
+            <ActivityIndicator
+                IsRunning="{Binding IsRunning}"
+                VerticalOptions="CenterAndExpand"/>
+            <Button    
+                BackgroundColor="Navy"
+                CornerRadius="26"
+                Command="{Binding LoginCommand}"
+                HeightRequest="46"
+                IsEnabled="{Binding IsEnabled}"
+                Text="Login"
+                TextColor="White"/>
 
-    </StackLayout>
+        </StackLayout>
+    </ScrollView>    
 </ContentPage>
